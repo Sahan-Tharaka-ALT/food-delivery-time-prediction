@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Portal - Organic Food Delivery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Nunito', sans-serif; }
+        .order-card { border-radius: 15px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s ease; }
+        .order-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .driver-theme { background-color: #F8DA76; border-bottom: 2px solid #e5c660; }
+        .btn-theme { background-color: #F8DA76; color: #000; border: none; }
+        .btn-theme:hover { background-color: #e5c660; color: #000; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light driver-theme shadow-sm py-3 mb-5">
+        <div class="container">
+            <span class="navbar-brand fw-bolder fs-4 text-dark">🚚 Driver Delivery Portal</span>
+            <div class="d-flex align-items-center gap-3 text-dark fw-bold">
+                <span class="d-none d-md-inline">Welcome, ID: {{ deliverer_id }}</span>
+                <button class="btn btn-dark btn-sm rounded-pill px-3 fw-bold shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#driverProfile">
+                    👤 My Profile
+                </button>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-dark btn-sm rounded-pill px-3 fw-bold bg-white">Log Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="driverProfile">
+      <div class="offcanvas-header border-bottom bg-light">
+        <h5 class="offcanvas-title fw-bold text-dark">Driver Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+         <div class="text-center mb-4 mt-2">
+            <div class="driver-theme text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm border border-dark" style="width: 90px; height: 90px; font-size: 36px; font-weight: bold;">
+                {% if driver %}{{ driver[2][0]|upper }}{% else %}👤{% endif %}
+            </div>
+            <h4 class="fw-bold mb-0 text-dark">{% if driver %}{{ driver[2] }}{% else %}Driver{% endif %}</h4>
+            <span class="badge bg-dark mt-2 fs-7">ID: {{ deliverer_id }}</span>
+         </div>
+         
+         <div class="card border-0 bg-light rounded-4 p-3 mb-3 shadow-sm">
+             <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Personal Details</h6>
+             <p class="mb-2 text-dark"><strong>📞 Phone:</strong> {% if driver %}{{ driver[8] }}{% else %}Loading...{% endif %}</p>
+             <p class="mb-2 text-dark"><strong>🎂 Age:</strong> {% if driver %}{{ driver[4] }}{% else %}Loading...{% endif %} years</p>
+             <p class="mb-1 text-dark"><strong>⭐ Rating:</strong> <span class="text-warning fw-bold fs-6" style="text-shadow: 1px 1px 1px rgba(0,0,0,0.1);">{% if driver %}{{ driver[9] }}{% else %}5.0{% endif %} / 5.0</span></p>
+         </div>
+
+         <div class="card border-0 bg-light rounded-4 p-3 mb-4 shadow-sm">
+             <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Vehicle Info</h6>
+             <p class="mb-2 text-dark"><strong>🚙 Type:</strong> {% if driver %}{{ driver[5] }}{% else %}Loading...{% endif %}</p>
+             <p class="mb-2 text-dark"><strong>🏷️ Plate No:</strong> <span class="badge border border-dark text-dark text-uppercase bg-white fs-7">{% if driver %}{{ driver[7] }}{% else %}Loading...{% endif %}</span></p>
+             <p class="mb-1 text-dark"><strong>🛠️ Condition:</strong> {% if driver %}{{ driver[6] }}{% else %}Loading...{% endif %} (0-2 Scale)</p>
+         </div>
+      </div>
+    </div>
+
+    <div class="container">
+        <h3 class="fw-bold text-dark mb-4">Live Orders Dashboard</h3>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="orders-wrapper">
+            
+            {% for order in orders %}
+            <div class="col order-container">
+                <div class="card order-card h-100" data-order-id="{{ order[0] }}">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pt-3 pb-0">
+                        <strong class="text-secondary fs-5">#100{{ order[0] }}</strong>
+                        
+                        {% if order[9] == 'Delivered' %}
+                            <span class="badge bg-success status-badge px-3 py-2 rounded-pill">{{ order[9] }}</span>
+                        {% elif order[9] == 'Pending' %}
+                            <span class="badge bg-warning text-dark status-badge px-3 py-2 rounded-pill shadow-sm">{{ order[9] }}</span>
+                        {% else %}
+                            <span class="badge bg-dark text-white status-badge px-3 py-2 rounded-pill">{{ order[9] }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title text-dark fw-bold mb-3">Organic Kitchen</h5>
+                        
+                        <div class="bg-light p-3 rounded-3 mb-3 border">
+                            <p class="mb-2"><strong class="text-dark">👤 Customer:</strong> <span class="text-secondary">{{ order[2] }}</span></p>
+                            <p class="mb-2"><strong class="text-dark">📞 Contact:</strong> <span class="text-secondary">{{ order[3] }}</span></p>
+                            <p class="mb-2"><strong class="text-dark">📍 Address:</strong> <span class="text-secondary">{{ order[4] }}</span></p>
+                            <p class="mb-0"><strong class="text-danger">🛣️ Distance:</strong> <span class="fw-bold">{{ order[6] }} km</span></p>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+                            <div>
+                                <strong class="text-dark d-block">🛍️ Items:</strong>
+                                <small class="text-muted lh-1">{{ order[7] }}</small>
+                            </div>
+                            <div class="text-end">
+                                <strong class="text-success fs-5 d-block">₹{{ "%.2f"|format(order[8] | float) }}</strong>
+                            </div>
+                        </div>
+
+                        {% if order[9] == 'Pending' %}
+                            <div class="pickup-form mb-3 bg-white p-3 border rounded shadow-sm">
+                                <label class="form-label small fw-bold text-secondary mb-2">Pre-pickup conditions:</label>
+                                <select class="form-select form-select-sm mb-2 input-traffic bg-light border-0">
+                                    <option value="" disabled selected>1. Road Traffic Density</option>
+                                    <option value="LOW">LOW</option>
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="HIGH">HIGH</option>
+                                    <option value="JAM">JAM</option>
+                                </select>
+                                <select class="form-select form-select-sm mb-2 input-weather bg-light border-0">
+                                    <option value="" disabled selected>2. Weather Condition</option>
+                                    <option value="Sunny">Sunny</option>
+                                    <option value="Stormy">Stormy</option>
+                                    <option value="Sandstorm">Sandstorm</option>
+                                    <option value="Cloudy">Cloudy</option>
+                                    <option value="Fog">Fog</option>
+                                    <option value="Windy">Windy</option>
+                                </select>
+                                <select class="form-select form-select-sm mb-2 input-multiple bg-light border-0">
+                                    <option value="" disabled selected>3. Multiple Deliveries?</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                                <select class="form-select form-select-sm input-festival bg-light border-0">
+                                    <option value="" disabled selected>4. Festival day?</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div class="action-buttons d-flex gap-2 mt-3">
+                                <button class="btn btn-success flex-grow-1 btn-accept fw-bold shadow-sm">Take Order</button>
+                                <button class="btn btn-outline-danger btn-reject fw-bold">Reject</button>
+                            </div>
+                            <div class="status-update mt-3 d-none">
+                        {% else %}
+                            <div class="pickup-form d-none"></div>
+                            <div class="action-buttons d-flex gap-2 mt-3 d-none"></div>
+                            <div class="status-update mt-3 pt-3 border-top">
+                        {% endif %}
+                        
+                            <label class="form-label fw-bold small text-secondary">Update Delivery Status:</label>
+                            <div class="input-group">
+                                <select class="form-select form-select-sm status-dropdown bg-light">
+                                    <option value="Order Picked Up">Order Picked Up</option>
+                                    <option value="Out for Delivery">Out for Delivery</option>
+                                    <option value="Delivered">Delivered 🏁</option>
+                                </select>
+                                <button class="btn btn-theme btn-sm btn-update-status px-3 fw-bold border border-dark">Update</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <div class="col-12 text-center text-muted mt-5 py-5 bg-white rounded-4 shadow-sm w-100 border border-warning">
+                    <h1 class="display-1 mb-3">📭</h1>
+                    <h4 class="fw-bold text-dark">No orders available right now!</h4>
+                    <p>Hang tight, new deliveries will appear here automatically.</p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // We wrap the button logic in a function so we can re-activate them when new orders load!
+        function attachEventListeners() {
+            // 1. Handle clicking "Take Order"
+            document.querySelectorAll('.btn-accept').forEach(button => {
+                button.onclick = function() { // Used .onclick to prevent duplicates
+                    const card = this.closest('.order-card');
+                    const orderId = card.getAttribute('data-order-id');
+                    
+                    const traffic = card.querySelector('.input-traffic').value;
+                    const weather = card.querySelector('.input-weather').value;
+                    const multiple = card.querySelector('.input-multiple').value;
+                    const festival = card.querySelector('.input-festival').value;
+
+                    if (!traffic || !weather || !multiple || !festival) {
+                        alert("Please fill out all 4 conditions before taking the order!");
+                        return;
+                    }
+
+                    card.querySelector('.pickup-form').classList.add('d-none');
+                    card.querySelector('.action-buttons').classList.add('d-none');
+                    card.querySelector('.status-update').classList.remove('d-none');
+                    
+                    const badge = card.querySelector('.status-badge');
+                    badge.className = 'badge bg-dark text-white status-badge px-3 py-2 rounded-pill';
+                    badge.innerText = 'Order Taken';
+
+                    fetch('/update_status', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ 
+                            order_id: orderId, status: 'Order Taken',
+                            traffic: traffic, weather: weather, multiple: multiple, festival: festival
+                        })
+                    });
+                };
+            });
+
+            // 2. Handle clicking "Reject"
+            document.querySelectorAll('.btn-reject').forEach(button => {
+                button.onclick = function() {
+                    const card = this.closest('.order-card');
+                    const orderId = card.getAttribute('data-order-id');
+                    const container = this.closest('.order-container');
+
+                    fetch('/update_status', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ order_id: orderId, status: 'Rejected' })
+                    }).then(res => res.json()).then(data => {
+                        container.style.display = 'none';
+                    });
+                };
+            });
+
+            // 3. Handle clicking "Update" status
+            document.querySelectorAll('.btn-update-status').forEach(button => {
+                button.onclick = function() {
+                    const card = this.closest('.order-card');
+                    const container = this.closest('.order-container');
+                    const orderId = card.getAttribute('data-order-id');
+                    const selectedStatus = card.querySelector('.status-dropdown').value;
+                    const badge = card.querySelector('.status-badge');
+                    
+                    fetch('/update_status', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ order_id: orderId, status: selectedStatus })
+                    }).then(res => res.json()).then(data => {
+                        badge.innerText = selectedStatus;
+                        if (selectedStatus === "Delivered") {
+                            badge.className = 'badge bg-success status-badge px-3 py-2 rounded-pill';
+                            card.querySelector('.status-update').classList.add('d-none');
+                            setTimeout(() => { container.style.display = 'none'; }, 1500);
+                        } else {
+                            badge.className = 'badge bg-dark text-white status-badge px-3 py-2 rounded-pill';
+                        }
+                    });
+                };
+            });
+        }
+
+        // Run it immediately when the page loads
+        attachEventListeners();
+
+        // ==========================================
+        // 🚀 LIVE BACKGROUND AUTO-REFRESH LOGIC
+        // ==========================================
+        setInterval(() => {
+            fetch('/deliver') // Call the server silently
+            .then(response => response.text())
+            .then(html => {
+                // Convert the response into an invisible HTML document
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Grab ONLY the orders area from the new invisible document
+                const newOrdersHTML = doc.getElementById('orders-wrapper').innerHTML;
+                const currentOrdersHTML = document.getElementById('orders-wrapper').innerHTML;
+                
+                // If the server has different data than what is on screen, update it!
+                if (newOrdersHTML !== currentOrdersHTML) {
+                    document.getElementById('orders-wrapper').innerHTML = newOrdersHTML;
+                    attachEventListeners(); // Reconnect the buttons to the new orders!
+                }
+            })
+            .catch(err => console.log("Background check failed", err));
+        }, 5000); // Check every 5000 milliseconds (5 seconds)
+        
+    </script>
+</body>
+</html>
