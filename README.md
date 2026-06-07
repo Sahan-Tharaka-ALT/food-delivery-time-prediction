@@ -1,70 +1,71 @@
-Food Delivery Time Prediction
-Overview
+# Food Delivery Time Prediction
+
+## Overview
 A full-stack machine learning project that predicts food delivery times in real time.
 The system includes a complete two-portal web application — one for customers and one
 for delivery drivers — built on top of a CatBoost regression model trained on real-world
 delivery data.
-Demo
-▶️ Watch Demo Video
 
-Web Application Features
-👤 User Portal
+## Demo
+▶️ [Watch Demo Video](https://drive.google.com/file/d/1g5FCzPTl_Ac_hq9udVowsm_TfO2bJ3dk/view?usp=sharing)
 
-Place a food order
-Track order status in real time (Processing → Picked up → Out for delivery)
-View predicted delivery time
-Rate the driver after delivery
+---
 
-🚗 Driver Portal
+## Web Application Features
 
-Accept or reject incoming orders
-Update order status at each stage (Preparing → Picked up → Ready to deliver)
-Input real-time conditions (weather, road traffic) for accurate prediction
-View delivery details
+### 👤 User Portal
+- Place a food order
+- Track order status in real time (Processing → Picked up → Out for delivery)
+- View predicted delivery time
+- Rate the driver after delivery
 
+### 🚗 Driver Portal
+- Accept or reject incoming orders
+- Update order status at each stage (Preparing → Picked up → Ready to deliver)
+- Input real-time conditions (weather, road traffic) for accurate prediction
+- View delivery details
 
-Project Structure
-food-delivery-time-prediction/
-├── project.ipynb                        # Full ML pipeline (EDA → model training)
-├── catboost_delivery_time_model.pkl     # Saved CatBoost model
-└── webapp/                              # Flask web application
+---
 
-ML Pipeline (inside notebook)
+## Project Structure
 
-Data loading and understanding
-Exploratory Data Analysis (EDA)
-Data cleaning and feature engineering
-Model comparison (Linear Regression, Decision Tree, Random Forest, XGBoost, CatBoost)
-Hyperparameter tuning
-Model saving for deployment
+---
 
+## ML Pipeline (inside notebook)
+1. Data loading and understanding
+2. Exploratory Data Analysis (EDA)
+3. Data cleaning and feature engineering
+4. Model comparison (Linear Regression, Decision Tree, Random Forest, XGBoost, CatBoost)
+5. Hyperparameter tuning
+6. Model saving for deployment
 
-Tools & Technologies
-CategoryToolsLanguagePythonData ProcessingPandas, NumPyVisualisationMatplotlib, SeabornMachine LearningScikit-learn, XGBoost, CatBoostWeb FrameworkFlaskOtherGeopy (distance calculation), Joblib (model saving)
+---
 
-How to Run the Web App
+## Tools & Technologies
+| Category | Tools |
+|---|---|
+| Language | Python |
+| Data Processing | Pandas, NumPy |
+| Visualisation | Matplotlib, Seaborn |
+| Machine Learning | Scikit-learn, XGBoost, CatBoost |
+| Web Framework | Flask |
+| Other | Geopy (distance calculation), Joblib (model saving) |
 
-Navigate to the webapp/ folder
+---
 
-   cd webapp
+## How to Run the Web App
+1. Navigate to the `webapp/` folder
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run: `python app.py`
+4. Open your browser at `http://localhost:5000`
 
-Install dependencies
+---
 
-   pip install -r requirements.txt
-
-Run the app
-
-   python app.py
-
-Open your browser at http://localhost:5000
-
-
-Dataset
+## Dataset
 The dataset contains real-world food delivery records with the following key features:
-
-Delivery person age and ratings
-Restaurant and delivery location (latitude/longitude)
-Weather conditions and road traffic density
-Vehicle type and condition
-Order type and festival indicator
-Target variable: Delivery time in minutes
+- Delivery person age and ratings
+- Restaurant and delivery location (latitude/longitude)
+- Weather conditions and road traffic density
+- Vehicle type and condition
+- Order type and festival indicator
+- Target variable: Delivery time in minutes
